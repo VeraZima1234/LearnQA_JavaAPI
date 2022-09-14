@@ -3,6 +3,7 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -63,5 +64,58 @@ public class RestAssuredClass {
             redirectURL=response.getHeader("Location");
         }
         System.out.println("Redirects Count = "+redirectsCount);
+    }
+
+    @Test
+    public void testToken()
+    {
+        //первый запрос без токена
+        JsonPath response= RestAssured
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .jsonPath();
+
+        // получение токена и время задержки
+        String token=response.get("token");
+        Integer taskTime=response.get("seconds");
+
+        // первый запрос с токеном
+        JsonPath responseWithToken= RestAssured
+                .given()
+                .queryParam("token",token)
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .jsonPath();
+
+        // проверка корректности статуса
+        String taskStatus=responseWithToken.get("status");
+        if(taskStatus.equals("Job is NOT ready"))
+            System.out.println("1st Status is correct");
+        else System.out.println("1st Status is wrong: " +taskStatus);
+
+        // ожидание времени задержки
+        try {
+            Thread.sleep(taskTime*1000);
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        // второй запрос с токеном
+        responseWithToken= RestAssured
+                .given()
+                .queryParam("token",token)
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .jsonPath();
+
+        // проверка статуса
+        taskStatus=responseWithToken.get("status");
+        if(taskStatus.equals("Job is ready"))
+            System.out.println("2nd Status is correct");
+        else System.out.println("2nd Status is wrong: " +taskStatus);
+
+        // проверка наличия результата
+        if(responseWithToken.get("result")!=null)
+            System.out.println("Result is present");
+        else
+            System.out.println("Result is absent");
     }
 }
