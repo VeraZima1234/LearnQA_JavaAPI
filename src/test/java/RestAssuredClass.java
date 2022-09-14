@@ -33,4 +33,35 @@ public class RestAssuredClass {
 
         System.out.println(response.getHeader("Location"));
     }
+
+    @Test
+    public void testLongRedirect()
+    {
+        Integer redirectsCount=0;
+        Response response= RestAssured
+                .given()
+                .redirects()
+                .follow(false)
+                .when()
+                .get("https://playground.learnqa.ru/api/long_redirect")
+                .andReturn();
+
+        String redirectURL=response.getHeader("Location");
+        while(response.getStatusCode()!=200)
+        {
+            redirectsCount++;
+            System.out.println(redirectURL);
+
+            response= RestAssured
+                    .given()
+                    .redirects()
+                    .follow(false)
+                    .when()
+                    .get(redirectURL)
+                    .andReturn();
+
+            redirectURL=response.getHeader("Location");
+        }
+        System.out.println("Redirects Count = "+redirectsCount);
+    }
 }
