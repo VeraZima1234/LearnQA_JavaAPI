@@ -19,4 +19,18 @@ public class RestAssuredClass {
         ArrayList<Map<String,String>>  responseList=response.get("messages");
         System.out.println(responseList.get(1).get("message"));
     }
+
+    @Test
+    public void testRedirect()
+    {
+        Response response= RestAssured
+                .given()
+                .redirects()
+                .follow(false)
+                .when()
+                .get("https://playground.learnqa.ru/api/long_redirect")
+                .andReturn();
+
+        System.out.println(response.getHeader("Location"));
+    }
 }
