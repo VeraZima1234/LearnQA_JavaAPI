@@ -154,7 +154,7 @@ public class RestAssuredClass {
 
         Integer i=0;
         String answer="You are NOT authorized";
-        while(!(answer.equals("You are authorized"))&&(i<uniquePasswords.length)) {
+        while(i<uniquePasswords.length) {
             Map<String, String> data = new HashMap<>();
             data.put("login", login);
             data.put("password", uniquePasswords[i].toString());
