@@ -197,4 +197,15 @@ public class RestAssuredClass {
         String string=longString.substring(0,length);
         assertTrue(string.length()>15,"String length < 15 signs");
     }
+
+    @Test
+    public void testVerifyCookie()
+    {
+        Response response = RestAssured
+                .get("https://playground.learnqa.ru/api/homework_cookie")
+                .andReturn();
+
+        assertEquals("hw_value",response.cookie("Homework"), "Cookie value is wrong");
+
+    }
 }
