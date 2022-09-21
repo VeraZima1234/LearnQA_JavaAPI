@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RestAssuredClass {
 
@@ -184,5 +186,15 @@ public class RestAssuredClass {
             i++;
         }
 
+
+    }
+
+    @Test
+    public void testStringLength()
+    {
+        int length= ThreadLocalRandom.current().nextInt(1,21);
+        String longString ="This is very long string";
+        String string=longString.substring(0,length);
+        assertTrue(string.length()>15,"String length < 15 signs");
     }
 }
