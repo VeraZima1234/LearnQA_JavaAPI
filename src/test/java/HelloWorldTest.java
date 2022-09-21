@@ -1,27 +1,66 @@
 
 import io.restassured.http.Headers;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import io.restassured.RestAssured;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class HelloWorldTest {
 
-    @Test
-    public void testRestAssured()
-    {
-        Response response = RestAssured
+    @ParameterizedTest
+    @ValueSource(strings={"", "John","Pete"})
+    public void testHelloMethodWithoutName(String name) {
+        Map<String,String> queryParams= new HashMap();
+        if(name.length()>0)
+        {
+            queryParams.put("name",name);
+        }
+        JsonPath response = RestAssured
                 .given()
-                .body("param1=value1&param2=value2") //body- параметры в теле запроса
-                .post("https://playground.learnqa.ru/api/check_type")
-                .andReturn();
-        response.print();
+                .queryParams(queryParams)
+                .get("https://playground.learnqa.ru/api/hello")
+                .jsonPath();
+        String answer=response.getString("answer");
+        String expectedName=(name.length()>0)?name:"someone";
+        assertEquals("Hello, "+expectedName, answer, "The answer is not expected");
 
+    }
 
         /*
+
+/////////////////////////////////////////////////////
+    @ParameterizedTest
+    @ValueSource(strings={"", "John","Pete"})
+    public void testHelloMethodWithoutName(String name) {
+        Map<String,String> queryParams= new HashMap();
+        if(name.length()>0)
+        {
+            queryParams.put("name",name);
+        }
+        JsonPath response = RestAssured
+                .given()
+                .queryParams(queryParams)
+                .get("https://playground.learnqa.ru/api/hello")
+                .jsonPath();
+        String answer=response.getString("answer");
+        String expectedName=(name.length()>0)?name:"someone";
+        assertEquals("Hello, someone", answer, "The answer is not expected");
+
+    }
+
+        //////////////////////////////////
+        Response response = RestAssured
+                .get("https://playground.learnqa.ru/api/map")
+                .andReturn();
+        assertEquals(200,response.statusCode(),"Unexpected status code");
         /////////////////////////////////////
         Map<String,String> data=new HashMap<>();
         data.put("login", "secret_login");
@@ -192,5 +231,5 @@ public class HelloWorldTest {
                 .andReturn();
                 response1.prettyPrint();
          */
-    }
+
 }
