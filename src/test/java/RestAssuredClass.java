@@ -208,4 +208,15 @@ public class RestAssuredClass {
         assertEquals("hw_value",response.cookie("Homework"), "Cookie value is wrong");
 
     }
+
+    @Test
+    public void testVerifyHeader()
+    {
+        Response response = RestAssured
+                .get("https://playground.learnqa.ru/api/homework_header")
+                .andReturn();
+
+        assertEquals("Some secret value",response.getHeader("x-secret-homework-header"), "Header value is wrong");
+
+    }
 }
