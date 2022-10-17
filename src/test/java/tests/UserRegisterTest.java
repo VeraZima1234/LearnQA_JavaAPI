@@ -7,6 +7,7 @@ import lib.BaseTestCase;
 import lib.DataGenerator;
 import org.junit.jupiter.api.Test;
 
+import java.sql.DatabaseMetaData;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,10 +19,13 @@ public class UserRegisterTest extends BaseTestCase {
         String email= "vinkotov@example.com";
         Map<String,String> userData=new HashMap<>();
         userData.put("email","vinkotov@example.com");
-        userData.put("password","123");
+        userData=DataGenerator.getRegistrationData(userData);
+        /*userData.put("password","123");
         userData.put("username","learnqa");
         userData.put("firstName","learnqa");
         userData.put("lastName","learnqa");
+
+         */
 
         Response responseCreateAuth= RestAssured
                 .given()
@@ -36,12 +40,12 @@ public class UserRegisterTest extends BaseTestCase {
     @Test
     public void testCreateUserSuccessfully(){
         String email= DataGenerator.getRandomEmail();
-        Map<String,String> userData=new HashMap<>();
-        userData.put("email",email);
+        Map<String,String> userData= DataGenerator.getRegistrationData();
+        /*userData.put("email",email);
         userData.put("password","123");
         userData.put("username","learnqa");
         userData.put("firstName","learnqa");
-        userData.put("lastName","learnqa");
+        userData.put("lastName","learnqa");*/
 
         Response responseCreateAuth= RestAssured
                 .given()

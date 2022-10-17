@@ -39,7 +39,7 @@ public class UserGetTest extends BaseTestCase {
 
         Response responseUserData=RestAssured
                 .given()
-                .header("x-csrf_token",header)
+                .header("x-csrf-token",header)
                 .cookie("auth_sid",cookie)
                 .get("https://playground.learnqa.ru/api/user/2")
                 .andReturn();
